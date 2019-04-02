@@ -1,7 +1,15 @@
 steps:
-# Install
-- name: 'gcr.io/cloud-builders/npm'
-  args: ['install']
-# Deploy
-- name: 'gcr.io/my-springboot-app/firebase'
-  args: ['deploy']
+  # Step 1:
+  - name: 'gcr.io/cloud-builders/mvn'
+    entrypoint: bash
+    args: ['/home/yogknerkar/build.bash']
+    volumes:
+      - name: 'jar'
+        path: /jar
+  # Step 2:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: bash
+    args: ['/home/yogknerkar/deploy.bash', '$_APP_NAME', '$_ENV_NAME', '$_REGION']
+    volumes:
+      - name: 'jar'
+        path: /jar
